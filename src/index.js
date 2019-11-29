@@ -29,12 +29,12 @@ app.use(morgan('dev'));
 
 //routes
 app.use('/api/',require('./routes/common.js'));
-app.use('/api/todo',require('./routes/todo.js'));
+app.use('/api/',require('./routes/todo.js'));
 app.use('/api/users',require('./routes/user.js'));
 
 //start's server
-app.listen(app.get('port'), () =>{
-    console.log("Server runing on port 4000")
+app.listen(process.env.PORT || 4000, () =>{
+    console.log("Server runing")
 });
 
 
