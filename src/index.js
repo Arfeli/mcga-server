@@ -29,7 +29,7 @@ app.use(morgan('dev'));
 
 //routes
 app.use('/api/',require('./routes/common.js'));
-app.use('/api/',require('./routes/todo.js'));
+app.use('/api/todo',require('./routes/todo.js'));
 app.use('/api/users',require('./routes/user.js'));
 
 //start's server

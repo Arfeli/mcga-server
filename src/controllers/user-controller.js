@@ -1,4 +1,5 @@
 const User = require('../models/user-model');
+const Todo = require('../models/todo-model');
 module.exports = {
     index: async (req, res, next) => {
         try {
@@ -9,7 +10,6 @@ module.exports = {
         }
     },
     create: async  (req,res , next) => {
-        console.log(req.body);
         try {
             const newUser = new User(req.body);
             const user = await newUser.save();
@@ -18,9 +18,20 @@ module.exports = {
             next(err)
         }
     },
-    update: async (req,res) => {
-        return res.json("not implemented");
+
+    update: async (req,res, next) => {
+        try{
+            const { userId } = req.params;
+            const newUser = req.body;
+            const result = await User.findByIdAndUpdate(userId, newUser);
+            res.status(200).json({success:true});
+        }catch(err){
+            next(err);
+        }
     },
+
+
+
     show : async (req, res, next) => {
         try{
             const { userId } = req.params;
@@ -32,14 +43,37 @@ module.exports = {
 
 
     },
-    _delete: async (req,res) => {
+    _delete: async (req,res, next) => {
         try{
             const { userId } = req.params;
-            const user = await User.findById(userId);
-            User.remove(user);
+            const result = await User.findByIdAndDelete(userId);
             res.status(200).json('deleted');
         }catch(err){
             next(err);
         }
+    },
+
+    todoList: async (req,res, next) => {
+        const {userId} = req.params;
+        const user = await User.findById(userId);
+
+    },
+
+    addTodo: async (req ,res ,next) => {
+      try{
+          const {userId} = req.params;
+          const newTodo = new Todo(req.body);
+          const user = await User.findById(userId);
+          newTodo.owner = user;
+          await newTodo.save();
+          user.thingsTodo.push(newTodo);
+          await user.save();
+          res.status(200).json(newTodo);
+      }catch(err){
+          next(err);
+      }
+
     }
+
+
 };

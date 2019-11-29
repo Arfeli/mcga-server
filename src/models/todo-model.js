@@ -5,7 +5,10 @@ const todoSchema = new Schema({
     title: String,
     description: String,
     date: String,
-    userId: Schema.Types.ObjectId
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    }
 });
 const Todo = mongoose.model('todo', todoSchema);
 module.exports = Todo;

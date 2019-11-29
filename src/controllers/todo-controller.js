@@ -1,21 +1,54 @@
+const Todo = require('../models/todo-model');
 module.exports = {
-    create:  (req,res) => {
-        return "not implemented";
+    index: async (req, res, next) => {
+        try {
+            const todo = await Todo.find({});
+            res.status(200).json(todo);
+        }catch(err){
+            next(err)
+        }
     },
-    edit: (req,res) => {
-        return "not implemented";
+    create: async  (req,res , next) => {
+        try {
+            const newTodo = new Todo(req.body);
+            const todo = await newTodo.save();
+            res.status(201).json(todo);
+        }catch(err){
+            next(err)
+        }
     },
-    show : (req,res) => {
-        return "not implemented";
+
+    update: async (req,res, next) => {
+        try{
+            const { todoId } = req.params;
+            const newTodo = req.body;
+            const result = await Todo.findByIdAndUpdate(todoId, newTodo);
+            res.status(200).json({
+                success:true,
+                todo: result
+            });
+        }catch(err){
+            next(err);
+        }
     },
-    _delete: (req,res) => {
-        return "not implemented";
+    show : async (req, res, next) => {
+        try{
+            const { todoId } = req.params;
+            const todo = await Todo.findById(todoId);
+            res.status(200).json(todo);
+        }catch(err){
+            next(err);
+        }
+
+
     },
-    index:(req,res) => {
-        res.status(200).json({
-            "resource": "Todo",
-            "message": "You requested todo list data",
-            "data" : []
-        });
+    _delete: async (req,res, next) => {
+        try{
+            const { todoId } = req.params;
+            const result = await Todo.findByIdAndDelete(todoId);
+            res.status(200).json('deleted');
+        }catch(err){
+            next(err);
+        }
     }
 };
