@@ -54,9 +54,17 @@ module.exports = {
     },
 
     todoList: async (req,res, next) => {
-        const {userId} = req.params;
-        const user = await User.findById(userId);
-
+        try {
+          const {userId} = req.params;
+          const user = await User.findById(userId);
+          const todoList = user.thingsTodo;
+          res.status(200).json({
+              user: user,
+              list: todoList
+          });
+        } catch (err) {
+          next(err);
+        }
     },
 
     addTodo: async (req ,res ,next) => {
